@@ -2,8 +2,8 @@
    Completa estos valores con tu repositorio GitHub antes de publicar.
    El token de GitHub NUNCA debe colocarse aquí. */
 window.NEXIFY_CONFIG = {
-  githubOwner: "TU_USUARIO",
-  githubRepo: "TU_REPOSITORIO",
+  githubOwner: "Alex43-hue3",
+  githubRepo: "Nexify",
   githubBranch: "main",
   catalogPath: "catalog.json",
   rawBase: ""
