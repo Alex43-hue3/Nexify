@@ -5,6 +5,6 @@ window.NEXIFY_CONFIG = {
   githubOwner: "TU_USUARIO",
   githubRepo: "TU_REPOSITORIO",
   githubBranch: "main",
-  catalogPath: "data/catalog.json",
+  catalogPath: "catalog.json",
   rawBase: ""
 };
