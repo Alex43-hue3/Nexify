@@ -8,7 +8,7 @@ const makeId=()=>crypto.randomUUID?crypto.randomUUID():`nxf-${Date.now()}-${Math
 let token=sessionStorage.getItem(TOKEN_KEY)||'';
 let catalog=[],fileSha=null,repoInfo=null;
 const owner=String(CONFIG.githubOwner||'').trim(),repo=String(CONFIG.githubRepo||'').trim();
-const branch=String(CONFIG.githubBranch||'main').trim(),path=String(CONFIG.catalogPath||'data/catalog.json').replace(/^\/+/,'');
+const branch=String(CONFIG.githubBranch||'main').trim(),path=String(CONFIG.catalogPath||'catalog.json').replace(/^\/+/,'');
 const configured=owner&&repo&&!/TU_USUARIO|TU_REPOSITORIO/.test(`${owner}/${repo}`);
 function apiUrl(suffix=''){return `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${suffix}`;}
 function headers(){return {'Accept':'application/vnd.github+json','Authorization':`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};}
