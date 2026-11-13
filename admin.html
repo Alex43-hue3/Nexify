@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06232d"><title>NEXIFY — Administración</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="admin-body">
+<header class="topbar admin-top"><a class="brand" href="index.html"><span class="brand-mark">N</span><span>NEXIFY <span class="brand-light">ADMIN</span></span></a><div class="top-actions"><a class="admin-link" href="index.html">Ver plataforma ↗</a></div></header>
+<main class="admin-wrap">
+  <section class="login-card" id="loginCard">
+    <span class="eyebrow">ÁREA PRIVADA · GITHUB</span>
+    <h1>Conecta tu<br><em>biblioteca.</em></h1>
+    <p>Autoriza este panel para publicar y actualizar el catálogo directamente en tu repositorio NEXIFY.</p>
+    <label for="githubToken">Token de acceso personal de GitHub</label>
+    <input id="githubToken" type="password" autocomplete="off" placeholder="github_pat_..." spellcheck="false">
+    <div class="form-hint">Crea un token Fine-grained con acceso únicamente a tu repositorio y permiso <strong>Contents: Read and write</strong>. El token se mantiene en la sesión de este navegador y no se guarda en el repositorio.</div>
+    <button class="btn btn-primary full" id="connectBtn">Conectar con GitHub →</button>
+    <p class="error-text" id="loginError" role="alert"></p>
+    <small>La lectura pública del catálogo no requiere token. La escritura sí requiere autorización de GitHub.</small>
+  </section>
+
+  <section class="dashboard hidden" id="dashboard">
+    <div class="admin-heading"><div><span class="eyebrow">CENTRO DE CONTROL · GITHUB</span><h1>Panel <em>administrativo.</em></h1><p id="connectionInfo">Repositorio conectado</p></div><button class="btn btn-glass" id="logoutBtn">Desconectar</button></div>
+    <div class="stats-grid">
+      <div class="stat-card"><span>PELÍCULAS</span><strong id="statMovies">0</strong></div>
+      <div class="stat-card"><span>SERIES</span><strong id="statSeries">0</strong></div>
+      <div class="stat-card"><span>CANALES EN VIVO</span><strong id="statChannels">0</strong></div>
+      <div class="stat-card"><span>CONTENIDO TOTAL</span><strong id="statTotal">0</strong></div>
+    </div>
+    <div class="admin-columns">
+      <section class="admin-panel">
+        <div class="panel-heading"><div><span class="eyebrow">BIBLIOTECA</span><h2 id="formHeading">Agregar contenido</h2></div><button class="text-btn hidden" id="cancelEditBtn" type="button">Cancelar edición</button></div>
+        <form id="contentForm">
+          <input type="hidden" id="editingId">
+          <div class="form-row">
+            <div><label for="contentType">Tipo</label><select id="contentType"><option value="movie">Película</option><option value="series">Serie</option><option value="channel">Canal en vivo</option></select></div>
+            <div><label for="contentCategory">Categoría / género</label><input id="contentCategory" placeholder="Acción, drama, noticias..."></div>
+          </div>
+          <label for="contentTitle">Título *</label><input id="contentTitle" required maxlength="140" placeholder="Nombre del contenido">
+          <label for="contentDescription">Descripción</label><textarea id="contentDescription" rows="3" maxlength="1200" placeholder="Una breve descripción..."></textarea>
+          <label for="contentImage">URL de portada / miniatura</label><input id="contentImage" type="url" placeholder="https://...">
+          <div class="form-row">
+            <div><label for="contentRating">Calificación</label><input id="contentRating" type="number" min="0" max="10" step="0.1" placeholder="8.5"></div>
+            <div><label for="contentYear">Año</label><input id="contentYear" type="number" min="1888" max="2100" placeholder="2026"></div>
+          </div>
+          <label for="contentSource">Fuente de reproducción *</label>
+          <select id="contentSource"><option value="mp4">MP4 / video directo</option><option value="hls">HLS / M3U8</option><option value="youtube">YouTube</option><option value="drive">Google Drive</option><option value="facebook">Facebook (URL de inserción)</option><option value="iframe">Iframe autorizado</option></select>
+          <label for="contentUrl">Enlace de reproducción</label><input id="contentUrl" type="url" placeholder="https://...">
+          <div id="seriesFields" class="series-fields hidden">
+            <div class="form-row"><div><label for="seasonTitle">Nombre de temporada</label><input id="seasonTitle" placeholder="Temporada 1"></div><div><label for="episodeNumber">Número de episodio</label><input id="episodeNumber" type="number" min="1" value="1"></div></div>
+            <label for="episodeTitle">Título del episodio</label><input id="episodeTitle" placeholder="Episodio 1">
+            <label for="episodeUrl">URL del episodio</label><input id="episodeUrl" type="url" placeholder="https://...">
+            <p class="form-hint">Al guardar una serie puedes añadir episodios de uno en uno. El panel los agrupa automáticamente por temporada.</p>
+          </div>
+          <label class="check-field"><input id="contentFeatured" type="checkbox"> Destacar en el catálogo</label>
+          <p class="form-hint">Usa enlaces públicos o autorizados. YouTube, Drive y Facebook requieren permisos y formatos compatibles con sus reproductores.</p>
+          <button class="btn btn-primary full" type="submit" id="saveContentBtn">＋ Publicar en GitHub</button>
+        </form>
+        <div class="notice" id="saveStatus" role="status">Los cambios se guardan como commits en el repositorio configurado.</div>
+      </section>
+      <section class="admin-panel">
+        <div class="panel-heading"><div><span class="eyebrow">CONTENIDO PUBLICADO</span><h2>Tu biblioteca</h2></div><button class="text-btn" id="exportBtn">Exportar JSON ↓</button></div>
+        <input id="adminSearch" type="search" placeholder="Buscar en la biblioteca..." aria-label="Buscar contenido">
+        <div id="adminList" class="admin-list"></div>
+        <div class="import-row"><label class="text-btn" for="importFile">Importar respaldo JSON ↑</label><input type="file" id="importFile" accept="application/json"></div>
+        <div class="admin-actions"><button class="btn btn-glass" id="refreshBtn" type="button">↻ Actualizar desde GitHub</button></div>
+      </section>
+    </div>
+    <div class="notice"><strong>Almacenamiento:</strong> GitHub es la fuente central del catálogo. El panel consulta y actualiza <code>data/catalog.json</code> mediante la API oficial de GitHub. No se utiliza una base de datos tradicional. Las imágenes y videos deben estar alojados en servicios públicos o autorizados; GitHub no debe usarse para almacenar archivos de video pesados.</div>
+  </section>
+</main>
+<script src="assets/config.js"></script><script src="assets/admin.js"></script>
+</body></html>
